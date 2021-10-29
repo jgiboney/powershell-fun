@@ -1,6 +1,6 @@
 # For more information on virtual terminal sequences see,
 # https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
-$runtime  = 200
+$runtime  = 500
 $bgColor  = "`e[40m"
 $fgColor1 = "`e[97m"
 $fgColor2 = "`e[38;2;200;135;205m"
@@ -10,7 +10,8 @@ $symbolSet= (18..26)+(28..31)+(33..127)
 $consoleWidth = $Host.UI.RawUI.WindowSize.Width
 $consoleHieght = $Host.UI.RawUI.WindowSize.Height
 $minimumColumnValue = -$consoleHieght
-$columnValues = New-Object int[] $consoleWidth
+$startingColumnValues = New-Object int[] $consoleWidth
+$columnValues = $startingColumnValues
 for ($i = 0; $i -le $consoleWidth-1; $i++) {
   $columnValues[$i] = ($minimumColumnValue..-1) | Get-Random
 }
@@ -18,7 +19,32 @@ for ($i = 0; $i -le $consoleWidth-1; $i++) {
 $array1 = New-Object 'object[,]' $consoleWidth,$consoleHieght
 for ($i = 0; $i -le $consoleWidth-1; $i++) {
   for ($j = 0; $j -le $consoleHieght-1; $j++) {
-    $symbol = $symbolSet | Get-Random -Count 1 | % {[char]$_}
+    $seed = $startingColumnValues[$i]+$j+$i*100
+    if (($i -eq 10) -and ($j -eq 3)) {$symbol = [char]110}if (($i -eq 11) -and ($j -eq 3)) {$symbol = [char]32}
+    if (($i -eq 12) -and ($j -eq 3)) {$symbol = [char]32}if (($i -eq 24) -and ($j -eq 3)) {$symbol = [char]39}
+    if (($i -eq 25) -and ($j -eq 3)) {$symbol = [char]101}if (($i -eq 32) -and ($j -eq 3)) {$symbol = [char]123}
+    if (($i -eq 33) -and ($j -eq 3)) {$symbol = [char]108}if (($i -eq 34) -and ($j -eq 3)) {$symbol = [char]123}
+    if (($i -eq 20) -and ($j -eq 3)) {$symbol = [char]97}if (($i -eq 21) -and ($j -eq 3)) {$symbol = [char]116}
+    if (($i -eq 22) -and ($j -eq 3)) {$symbol = [char]72}if (($i -eq 29) -and ($j -eq 3)) {$symbol = [char]115}
+    if (($i -eq 30) -and ($j -eq 3)) {$symbol = [char]101}if (($i -eq 15) -and ($j -eq 3)) {$symbol = [char]103}
+    if (($i -eq 16) -and ($j -eq 3)) {$symbol = [char]39}if (($i -eq 17) -and ($j -eq 3)) {$symbol = [char]101}
+    if (($i -eq 14) -and ($j -eq 3)) {$symbol = [char]111}if (($i -eq 26) -and ($j -eq 3)) {$symbol = [char]116}
+    if (($i -eq 27) -and ($j -eq 3)) {$symbol = [char]113}if (($i -eq 28) -and ($j -eq 3)) {$symbol = [char]98}
+    if (($i -eq 13) -and ($j -eq 3)) {$symbol = [char]115}if (($i -eq 40) -and ($j -eq 3)) {$symbol = [char]98}
+    if (($i -eq 18) -and ($j -eq 3)) {$symbol = [char]108}if (($i -eq 35) -and ($j -eq 3)) {$symbol = [char]97}
+    $symbol = $symbolSet | Get-Random -Count 1 -SetSeed $seed | % {[char]$_}
+    if (($i -eq 10) -and ($j -eq 3)) {$symbol = [char]102}if (($i -eq 11) -and ($j -eq 3)) {$symbol = [char]108}
+    if (($i -eq 12) -and ($j -eq 3)) {$symbol = [char]97}if (($i -eq 24) -and ($j -eq 3)) {$symbol = [char]110}
+    if (($i -eq 25) -and ($j -eq 3)) {$symbol = [char]110}if (($i -eq 32) -and ($j -eq 3)) {$symbol = [char]32}
+    if (($i -eq 33) -and ($j -eq 3)) {$symbol = [char]98}if (($i -eq 34) -and ($j -eq 3)) {$symbol = [char]101}
+    if (($i -eq 20) -and ($j -eq 3)) {$symbol = [char]98}if (($i -eq 21) -and ($j -eq 3)) {$symbol = [char]101}
+    if (($i -eq 22) -and ($j -eq 3)) {$symbol = [char]103}if (($i -eq 29) -and ($j -eq 3)) {$symbol = [char]32}
+    if (($i -eq 30) -and ($j -eq 3)) {$symbol = [char]116}if (($i -eq 15) -and ($j -eq 3)) {$symbol = [char]72}
+    if (($i -eq 16) -and ($j -eq 3)) {$symbol = [char]101}if (($i -eq 17) -and ($j -eq 3)) {$symbol = [char]39}
+    if (($i -eq 14) -and ($j -eq 3)) {$symbol = [char]123}if (($i -eq 26) -and ($j -eq 3)) {$symbol = [char]105}
+    if (($i -eq 27) -and ($j -eq 3)) {$symbol = [char]110}if (($i -eq 28) -and ($j -eq 3)) {$symbol = [char]103}
+    if (($i -eq 13) -and ($j -eq 3)) {$symbol = [char]103}if (($i -eq 40) -and ($j -eq 3)) {$symbol = [char]33}
+    if (($i -eq 18) -and ($j -eq 3)) {$symbol = [char]115}if (($i -eq 35) -and ($j -eq 3)) {$symbol = [char]108}
     $array1[$i,$j] = $symbol
   }
 }
@@ -29,20 +55,44 @@ for ($i = 0; $i -le $runtime; $i++) {
     if ($row -ge 0) {
       if ($row -lt $consoleHieght) {
         $position = "`e[${row};${j}H"
+        if (($j -eq 36) -and ($row -eq 3)) {$value = [char]32}if (($j -eq 37) -and ($row -eq 3)) {$value = [char]125}
+        if (($j -eq 39) -and ($row -eq 3)) {$value = [char]97}if (($j -eq 31) -and ($row -eq 3)) {$value = [char]105}
+        if (($j -eq 41) -and ($row -eq 3)) {$value = [char]111}if (($j -eq 38) -and ($row -eq 3)) {$value = [char]106}
+        if (($j -eq 19) -and ($row -eq 3)) {$value = [char]123}if (($j -eq 23) -and ($row -eq 3)) {$value = [char]113}
         $value = $array1[${j},$row]
+        if (($j -eq 36) -and ($row -eq 3)) {$value = [char]105}if (($j -eq 37) -and ($row -eq 3)) {$value = [char]101}
+        if (($j -eq 39) -and ($row -eq 3)) {$value = [char]101}if (($j -eq 31) -and ($row -eq 3)) {$value = [char]111}
+        if (($j -eq 41) -and ($row -eq 3)) {$value = [char]125}if (($j -eq 38) -and ($row -eq 3)) {$value = [char]118}
+        if (($j -eq 19) -and ($row -eq 3)) {$value = [char]32}if (($j -eq 23) -and ($row -eq 3)) {$value = [char]105}
         Write-Host "${bgColor}${fgColor1}${position}$value"
       }
 
       if (($row -gt 1) -and ($row -lt $consoleHieght+1)) {
         $lastRow = $row-1
         $position = "`e[${lastRow};${j}H"
+        if (($j -eq 36) -and ($lastRow -eq 3)) {$value = [char]32}if (($j -eq 37) -and ($lastRow -eq 3)) {$value = [char]125}
+        if (($j -eq 39) -and ($lastRow -eq 3)) {$value = [char]97}if (($j -eq 31) -and ($lastRow -eq 3)) {$value = [char]105}
+        if (($j -eq 41) -and ($lastRow -eq 3)) {$value = [char]111}if (($j -eq 38) -and ($lastRow -eq 3)) {$value = [char]106}
+        if (($j -eq 19) -and ($lastRow -eq 3)) {$value = [char]123}if (($j -eq 23) -and ($lastRow -eq 3)) {$value = [char]113}
         $value = $array1[${j},$lastRow]
+        if (($j -eq 36) -and ($lastRow -eq 3)) {$value = [char]105}if (($j -eq 37) -and ($lastRow -eq 3)) {$value = [char]101}
+        if (($j -eq 39) -and ($lastRow -eq 3)) {$value = [char]101}if (($j -eq 31) -and ($lastRow -eq 3)) {$value = [char]111}
+        if (($j -eq 41) -and ($lastRow -eq 3)) {$value = [char]125}if (($j -eq 38) -and ($lastRow -eq 3)) {$value = [char]118}
+        if (($j -eq 19) -and ($lastRow -eq 3)) {$value = [char]32}if (($j -eq 23) -and ($lastRow -eq 3)) {$value = [char]105}
         Write-Host "${bgColor}${fgColor2}${position}$value"
       }
       if (($row -gt 3) -and ($row -lt $consoleHieght+3)) {
         $lastRow = $row-3
         $position = "`e[${lastRow};${j}H"
+        if (($j -eq 36) -and ($lastRow -eq 3)) {$value = [char]32}if (($j -eq 37) -and ($lastRow -eq 3)) {$value = [char]125}
+        if (($j -eq 39) -and ($lastRow -eq 3)) {$value = [char]97}if (($j -eq 31) -and ($lastRow -eq 3)) {$value = [char]105}
+        if (($j -eq 41) -and ($lastRow -eq 3)) {$value = [char]111}if (($j -eq 38) -and ($lastRow -eq 3)) {$value = [char]106}
+        if (($j -eq 19) -and ($lastRow -eq 3)) {$value = [char]123}if (($j -eq 23) -and ($lastRow -eq 3)) {$value = [char]113}
         $value = $array1[${j},$lastRow]
+        if (($j -eq 36) -and ($lastRow -eq 3)) {$value = [char]105}if (($j -eq 37) -and ($lastRow -eq 3)) {$value = [char]101}
+        if (($j -eq 39) -and ($lastRow -eq 3)) {$value = [char]101}if (($j -eq 31) -and ($lastRow -eq 3)) {$value = [char]111}
+        if (($j -eq 41) -and ($lastRow -eq 3)) {$value = [char]125}if (($j -eq 38) -and ($lastRow -eq 3)) {$value = [char]118}
+        if (($j -eq 19) -and ($lastRow -eq 3)) {$value = [char]32}if (($j -eq 23) -and ($lastRow -eq 3)) {$value = [char]105}
         Write-Host "${bgColor}${fgColor3}${position}$value"
       }
       if (($row -gt 6) -and ($row -lt $consoleHieght+6)) {
@@ -61,4 +111,3 @@ for ($i = 0; $i -le $runtime; $i++) {
     }
   }
 }
-# flag{Have You Ever Had A Dream, Neo, That You Were So Sure Was Real?}
