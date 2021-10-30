@@ -2,9 +2,9 @@
 # https://docs.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
 $runtime  = 500
 $bgColor  = "`e[40m"
-$fgColor1 = "`e[97m"
-$fgColor2 = "`e[38;2;200;135;205m"
-$fgColor3 = "`e[38;2;115;175;170m"
+$fgColor1 = "`e[38;2;234;216;216m"
+$fgColor2 = "`e[38;2;210;160;216m"
+$fgColor3 = "`e[38;2;132;202;190m"
 $fgColor4 = "`e[30m"
 $symbolSet= (18..26)+(28..31)+(33..127)
 $consoleWidth = $Host.UI.RawUI.WindowSize.Width
